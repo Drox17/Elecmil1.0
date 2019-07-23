@@ -3,6 +3,8 @@ from tkinter import ttk
 import tkinter as tk
 import sqlite3
 import os.path
+import datetime
+
 # Aqui, crearemos nuestra clase, Window, y heredames del marco
 # la clase frame es una clase del modúlo de tkinter(see Lib/tkinter/__init__)
 
@@ -23,7 +25,7 @@ class Window(Frame):
         self.priven.iconbitmap('ico.ico')
         self.priven.configure(background = 'grey')
         #----------------------------------------_______________________________________#
-        global master_frame
+        global master_frame, frame3
         master_frame = LabelFrame(self.priven)
         frame1 = LabelFrame(master_frame, text = 'Upper', height = 200, width = 100)
         void = LabelFrame(self.priven, height = 100, width = 100)
@@ -36,7 +38,6 @@ class Window(Frame):
         void.grid(row = 1, column = 1, padx = 5, pady = 5, sticky = 'nsew')
         frame1.grid(row = 0, column = 0, padx = 5, pady = 5, sticky = 'nswe')
         frame3.grid(row = 1, column = 0, padx = 5, pady = 5, sticky = 'n')
-
 
         #Frames
         f1 = LabelFrame(self.priven, text='Agregar', height = 225, width = 500, padx =5)
@@ -90,6 +91,7 @@ class Window(Frame):
         self.extra = Text(frame2, height=6, width=60)
         self.diag = Text(frame2, height=6, width=60, fg="blue4")
 
+
         self.name.focus()
         self.name.grid(row = 1, column = 1, sticky='w')
         self.numberp.grid(row = 1, column = 3, sticky='w', padx = 5)
@@ -106,26 +108,23 @@ class Window(Frame):
 
         #---------------------------------Lista----------------------------------#
         #vista de arbol
-        self.tree = ttk.Treeview(frame3, height = 20, show='headings', columns=('id', 'name', 'brand', 'model', 'date'), selectmode='extended')
+        self.tree = ttk.Treeview(frame3, height = 20, show='headings', columns=('name', 'brand', 'model', 'datei'), selectmode='extended')
         self.tree.grid_propagate(False)
         self.tree.grid(row = 0, column = 0, sticky='nsew', padx = 5, pady = 10)
 
-        self.tree.heading('id', text = 'Estado', anchor = CENTER)
         self.tree.heading('name', text = 'Nombre', anchor = CENTER)
-        self.tree.heading('date', text = 'Fecha', anchor = CENTER)
+        self.tree.heading('datei', text = 'Fecha', anchor = CENTER)
         self.tree.heading('brand', text = 'Marca', anchor = CENTER)
         self.tree.heading('model', text = 'Modelo', anchor = CENTER)
-        self.tree.heading('date', text = 'Fecha', anchor = CENTER)
+
 
         self.tree.column('#0', minwidth=20, width=40)
         self.tree.column('#1', minwidth=20, width=130)
         self.tree.column('#2', minwidth=20, width=110)
         self.tree.column('#3', minwidth=20, width=120)
-        self.tree.column('#4', minwidth=20, width=100)
 
         #ejecución consulta
         self.get_products()
-
 
     #Creation of init_window
     def init_window(self):
@@ -154,7 +153,7 @@ class Window(Frame):
         db_rows = self.run_query(query)
         #rellenando datos
         for row in db_rows:
-            self.tree.insert('', 0, text=(),values=(row[1], row[2], row[3], row[4]))
+            self.tree.insert('', 0, text=(),values=(row[1], row[3], row[4], row[2]))
     #----------------------------------------------------------------------------------------------
     #verificador de campos vacios
     def validation(self):
@@ -162,7 +161,7 @@ class Window(Frame):
     #Función para guardar en base de datos
     def add_product(self):
         if self.validation():
-            query = 'INSERT INTO libreta(nombre, marca, modelo) VALUES(?, ?, ?)'
+            query = 'INSERT INTO libreta(nombre, marca, modelo, datei) VALUES(?, ?, ?, date())'
             parameters = (self.name.get(), self.brand.get(), self.model.get())
             self.run_query(query, parameters)
             self.message['text'] = 'Guardado Satisfactoriamente'
@@ -172,6 +171,7 @@ class Window(Frame):
         else:
             self.message['text'] = 'El nombre del dueño y la marca del dispositivo son obligatorios!'
         self.get_products()
+        #menú contextual
 
     def onExit(self):
         self.quit()
