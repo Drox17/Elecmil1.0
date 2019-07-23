@@ -25,95 +25,88 @@ class Window(Frame):
         self.priven.iconbitmap('ico.ico')
         self.priven.configure(background = 'grey')
         #----------------------------------------_______________________________________#
-        global master_frame, frame3
+        global master_frame, f3
         master_frame = LabelFrame(self.priven)
-        frame1 = LabelFrame(master_frame, text = 'Upper', height = 200, width = 100)
-        void = LabelFrame(self.priven, height = 100, width = 100)
-        frame3 = LabelFrame(master_frame, text = 'Lista')
-
-        frame1.grid_propagate(False)
-        void.grid_propagate(False)
-
-        master_frame.grid(row = 0, column = 0, rowspan = 2, pady = 5, padx = 5, sticky = 'nsew')
-        void.grid(row = 1, column = 1, padx = 5, pady = 5, sticky = 'nsew')
-        frame1.grid(row = 0, column = 0, padx = 5, pady = 5, sticky = 'nswe')
-        frame3.grid(row = 1, column = 0, padx = 5, pady = 5, sticky = 'n')
-
-        #Frames
+        fr1 = LabelFrame(master_frame, text = 'Finalizados', height = 200, width = 100)
         f1 = LabelFrame(self.priven, text='Agregar', height = 225, width = 500, padx =5)
-        frame2 = LabelFrame(self.priven, text='Registrador', height = 225, width = 500, padx =5)
+        f2 = LabelFrame(self.priven, text='Registrador', height = 225, width = 500, padx =5)
+        f3 = LabelFrame(master_frame, text = 'Lista')
+        void = LabelFrame(self.priven, height = 100, width = 100)
+
         f1.grid_propagate(False)
-        frame2.grid_propagate(False)
+        fr1.grid_propagate(False)
+        f2.grid_propagate(False)
+        void.grid_propagate(False)
+        #Frames
+        master_frame.grid(row = 0, column = 0, rowspan = 2, pady = 5, padx = 5, sticky = 'nsew')
+        fr1.grid(row = 0, column = 0, padx = 5, pady = 5, sticky = 'nswe')
         f1.grid()
-        frame2.grid(stick = 'n')
+        f2.grid(stick = 'n')
+        f3.grid(row = 1, column = 0, padx = 5, pady = 5, sticky = 'n')
+        void.grid(row = 1, column = 1, padx = 5, pady = 5, sticky = 'nsew')
 
         #cambio dinamico de frame
         #Función cambio de frames
         def raise_frame(frame):
             frame.tkraise()
 
-        for frame in (f1, frame2):
+        for frame in (f1, f2):
             frame.grid(row = 0, column = 1, pady = 5, padx = 5, sticky = 'news')
         #colocando label en grilla
         Label(f1).grid()
-        Label(frame2).grid()
+        Label(f2).grid()
         #Botones
-        add = Button(f1, text='Agregar', command=frame2.lift).grid(column = 1, row = 0, pady =170, padx = 215)
-        cancel = Button(frame2,text = 'Cancelar', command=f1.lift).grid(row = 10, column = 2, columnspan = 2, sticky ='we')
-        ok = Button(frame2, text = 'Ok', command=self.add_product).grid(row = 10, column = 0, columnspan = 2, sticky = 'we')
-
-        #eliminar = Button(frame1, text='Eliminar', command = self.delete_product).grid()
-        #editar = Button(frame1, text='Editar').grid(row=1)
-        #función cambio de frame
+        add = Button(f1, text='Agregar', command=f2.lift).grid(column = 1, row = 0, pady =170, padx = 215)
+        cancel = Button(f2,text = 'Cancelar', command=f1.lift).grid(row = 10, column = 2, columnspan = 2, sticky ='we')
+        ok = Button(f2, text = 'Ok', command=self.add_product).grid(row = 10, column = 0, columnspan = 2, sticky = 'we')
+        #eliminar = Button(f1, text='Eliminar', command = self.delete_product).grid()
+        #editar = Button(f1, text='Editar').grid(row=1)
 
         #Mensajes de salida
         self.message = Label(void, text = '', fg = 'black', pady = 115, padx = 70)
         self.message.grid(row = 3, column = 0, columnspan = 2, sticky = 'nsew')
 
         #---------------------------Registro---------------------------------------#
-        Label(frame2, text = 'Nombre del dueño:', fg="blue4", bg ="gray80").grid(row = 1, column = 0, sticky='w')
-        Label(frame2, text = 'Número de telefono:', fg="blue4", bg ="gray80").grid(row = 1, column = 2, sticky='w')
-        Label(frame2, text = 'Presupuesto:').grid(row = 2, column = 0)
-        Label(frame2, text = 'Precio:').grid(row = 2, column = 2)
-        Label(frame2, text = 'Marca:', fg="blue4", bg ="gray80").grid(row = 3, column = 0, sticky = 'nsew')
-        Label(frame2, text = 'Modelo:', fg="blue4", bg ="gray80").grid(row = 3, column = 2, sticky = 'nsew')
-        Label(frame2, text = 'Síntomas:').grid(row = 4, column = 0, columnspan = 4, sticky = 'nsew')
-        Label(frame2, text = 'Modificaciones:', fg="blue4", bg ="gray80").grid(row = 6, column = 0,columnspan = 4, sticky = 'nsew')
-        Label(frame2, text = 'Diagnóstico:')
+        Label(f2, text = 'Nombre del dueño:', fg="blue4", bg ="gray80").grid(row = 1, column = 0, sticky='w')
+        Label(f2, text = 'Número de telefono:', fg="blue4", bg ="gray80").grid(row = 1, column = 2, sticky='w')
+        Label(f2, text = 'Marca:').grid(row = 2, column = 0)
+        Label(f2, text = 'Modelo:').grid(row = 2, column = 2)
+        Label(f2, text = 'Serie:', fg="blue4", bg ="gray80").grid(row = 3, column = 0, sticky = 'nsew')
+        Label(f2, text = 'Presupuesto:', fg="blue4", bg ="gray80").grid(row = 3, column = 2, sticky = 'nsew')
+        Label(f2, text = 'Síntomas:').grid(row = 4, column = 0, columnspan = 4, sticky = 'nsew')
+        Label(f2, text = 'Modificaciones:', fg="blue4", bg ="gray80").grid(row = 6, column = 0,columnspan = 4, sticky = 'nsew')
 
-        self.name = Entry(frame2)
-        self.numberp = Entry(frame2)
-        self.budget = Entry(frame2)
-        self.price = Entry(frame2)
-        self.brand = Entry(frame2)
-        self.model = Entry(frame2)
-        self.symptom = Text(frame2, height=6, width=60)
-        self.extra = Text(frame2, height=6, width=60)
-        self.diag = Text(frame2, height=6, width=60, fg="blue4")
-
+        self.name = Entry(f2)
+        self.numberp = Entry(f2)
+        self.brand = Entry(f2)
+        self.model = Entry(f2)
+        self.serie = Entry(f2)
+        self.budget = Entry(f2)
+        self.symptom = Text(f2, height=6, width=60)
+        self.extra = Text(f2, height=6, width=60)
 
         self.name.focus()
         self.name.grid(row = 1, column = 1, sticky='w')
         self.numberp.grid(row = 1, column = 3, sticky='w', padx = 5)
-        self.budget.grid(row = 2, column = 1, sticky='w')
-        self.price.grid(row = 2, column = 3, sticky='w', padx = 5)
-        self.brand.grid(row = 3, column = 1)
-        self.model.grid(row = 3, column = 3)
+        self.brand.grid(row = 2, column = 1, sticky='w')
+        self.model.grid(row = 2, column = 3, sticky='w', padx = 5)
+        self.serie.grid(row = 3, column = 1)
+        self.budget.grid(row = 3, column = 3)
         self.symptom.grid(row = 5, column = 0, columnspan = 4,sticky = 'w', pady = 5)
         self.extra.grid(row = 9, column = 0, columnspan = 4,sticky = 'nw', pady = 5)
-        self.diag.grid(row = 9, column = 0, columnspan = 4,sticky = 'nw', pady = 5)
+
         #-------------------------------------------------------------------------------#
         raise_frame(f1)
     #------------------------------------#
 
         #---------------------------------Lista----------------------------------#
         #vista de arbol
-        self.tree = ttk.Treeview(frame3, height = 20, show='headings', columns=('name', 'brand', 'model', 'datei'), selectmode='extended')
+        self.tree = ttk.Treeview(f3, height = 20, show='headings', columns=('name', 'brand', 'model', 'datei'), selectmode='extended')
         self.tree.grid_propagate(False)
         self.tree.grid(row = 0, column = 0, sticky='nsew', padx = 5, pady = 10)
 
         self.tree.heading('name', text = 'Nombre', anchor = CENTER)
-        self.tree.heading('datei', text = 'Fecha', anchor = CENTER)
+        self.tree.heading('datei', text = 'Fecha de registro', anchor = CENTER)
         self.tree.heading('brand', text = 'Marca', anchor = CENTER)
         self.tree.heading('model', text = 'Modelo', anchor = CENTER)
 
@@ -142,6 +135,7 @@ class Window(Frame):
             result = cursor.execute(query, parameters)
             conn.commit()
         return result
+
     #función para mostrar datos en lista------------------------------------------------------
     def get_products(self):
         #limpiador de tabla
@@ -158,6 +152,7 @@ class Window(Frame):
     #verificador de campos vacios
     def validation(self):
         return len(self.name.get()) != 0 and len(self.brand.get()) !=0
+
     #Función para guardar en base de datos
     def add_product(self):
         if self.validation():
@@ -168,6 +163,7 @@ class Window(Frame):
             self.name.delete(0, END)
             self.brand.delete(0, END)
             self.model.delete(0, END)
+            raise_frame()
         else:
             self.message['text'] = 'El nombre del dueño y la marca del dispositivo son obligatorios!'
         self.get_products()
