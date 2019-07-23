@@ -39,10 +39,10 @@ class Window(Frame):
         void.grid_propagate(False)
         #Frames
         master_frame.grid(row = 0, column = 0, rowspan = 2, pady = 5, padx = 5, sticky = 'nsew')
-        fr1.grid(row = 0, column = 0, padx = 5, pady = 5, sticky = 'nswe')
+        fr1.grid(row = 1, column = 0, padx = 5, pady = 5, sticky = 'nswe')
         f1.grid()
         f2.grid(stick = 'n')
-        f3.grid(row = 1, column = 0, padx = 5, pady = 5, sticky = 'n')
+        f3.grid(row = 0, column = 0, padx = 5, pady = 5, sticky = 'n')
         void.grid(row = 1, column = 1, padx = 5, pady = 5, sticky = 'nsew')
 
         #cambio dinamico de frame
@@ -104,22 +104,19 @@ class Window(Frame):
         self.tree = ttk.Treeview(f3, height = 20, show='headings', columns=('name', 'brand', 'model', 'datei'), selectmode='extended')
         self.tree.grid_propagate(False)
         self.tree.grid(row = 0, column = 0, sticky='nsew', padx = 5, pady = 10)
-
+        #configuración de los encabezados
         self.tree.heading('name', text = 'Nombre', anchor = CENTER)
         self.tree.heading('datei', text = 'Fecha de registro', anchor = CENTER)
         self.tree.heading('brand', text = 'Marca', anchor = CENTER)
         self.tree.heading('model', text = 'Modelo', anchor = CENTER)
-
-
+        #ajuste de el tamaño de encabezado
         self.tree.column('#0', minwidth=20, width=40)
         self.tree.column('#1', minwidth=20, width=130)
         self.tree.column('#2', minwidth=20, width=110)
         self.tree.column('#3', minwidth=20, width=120)
-
         #ejecución consulta
         self.get_products()
-
-    #Creation of init_window
+    #Creacion de init_window
     def init_window(self):
         menubar = Menu(self.master)
         self.master.config(menu=menubar)
@@ -163,7 +160,6 @@ class Window(Frame):
             self.name.delete(0, END)
             self.brand.delete(0, END)
             self.model.delete(0, END)
-            raise_frame()
         else:
             self.message['text'] = 'El nombre del dueño y la marca del dispositivo son obligatorios!'
         self.get_products()
@@ -172,12 +168,12 @@ class Window(Frame):
     def onExit(self):
         self.quit()
 
-# root window created. Here, that would be the only window, but
+# creando la ventata "root". Aqui, that would be the only window, pero
 # you can later have windows within windows.
 root = Tk()
-#creation of an instance
+#creación de una instancia
 app = Window(root)
 #desactiva el maximizar
 root.resizable(0, 0)
-#mainloop
+#mainloop mantiene la ventana abierta
 root.mainloop()
