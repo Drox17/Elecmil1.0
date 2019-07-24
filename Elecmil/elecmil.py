@@ -24,26 +24,26 @@ class Window(Frame):
         self.priven.title('ElecmilV (1.0)')
         self.priven.iconbitmap('ico.ico')
         self.priven.configure(background = 'grey')
-        #----------------------------------------_______________________________________#
+        #Frames
         global master_frame, f3
         master_frame = LabelFrame(self.priven)
         fr1 = LabelFrame(master_frame, text = 'Finalizados', height = 200, width = 100)
         f1 = LabelFrame(self.priven, text='Agregar', height = 225, width = 500, padx =5)
         f2 = LabelFrame(self.priven, text='Registrador', height = 225, width = 500, padx =5)
         f3 = LabelFrame(master_frame, text = 'Lista')
-        void = LabelFrame(self.priven, height = 100, width = 100)
-
+        f4 = LabelFrame(self.priven, text='Información', height = 100, width = 100)
+        #Desabilitando auto ajuste de frames
         f1.grid_propagate(False)
         fr1.grid_propagate(False)
         f2.grid_propagate(False)
-        void.grid_propagate(False)
-        #Frames
+        f4.grid_propagate(False)
+        #configurando ubicaciones de frames
         master_frame.grid(row = 0, column = 0, rowspan = 2, pady = 5, padx = 5, sticky = 'nsew')
         fr1.grid(row = 1, column = 0, padx = 5, pady = 5, sticky = 'nswe')
         f1.grid()
         f2.grid(stick = 'n')
         f3.grid(row = 0, column = 0, padx = 5, pady = 5, sticky = 'n')
-        void.grid(row = 1, column = 1, padx = 5, pady = 5, sticky = 'nsew')
+        f4.grid(row = 1, column = 1, padx = 5, pady = 5, sticky = 'nsew')
 
         #cambio dinamico de frame
         #Función cambio de frames
@@ -63,7 +63,7 @@ class Window(Frame):
         #editar = Button(f1, text='Editar').grid(row=1)
 
         #Mensajes de salida
-        self.message = Label(void, text = '', fg = 'black', pady = 115, padx = 70)
+        self.message = Label(f4, text = '', fg = 'black', pady = 115, padx = 70)
         self.message.grid(row = 3, column = 0, columnspan = 2, sticky = 'nsew')
 
         #---------------------------Registro---------------------------------------#
@@ -116,6 +116,11 @@ class Window(Frame):
         self.tree.column('#3', minwidth=20, width=120)
         #ejecución consulta
         self.get_products()
+        #Scrollbar para lista
+        Scroll = Scrollbar(f3 ,command=self.tree.yview)
+        Scroll.grid(row=0,column=6,ipady=135, sticky='ns')
+        self.tree.config(yscrollcommand=Scroll.set)
+
     #Creacion de init_window
     def init_window(self):
         menubar = Menu(self.master)
@@ -164,6 +169,8 @@ class Window(Frame):
             self.message['text'] = 'El nombre del dueño y la marca del dispositivo son obligatorios!'
         self.get_products()
         #menú contextual
+    #Información extra
+
 
     def onExit(self):
         self.quit()
