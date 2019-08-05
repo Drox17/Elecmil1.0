@@ -32,7 +32,7 @@ class Window(Frame):
         f2 = LabelFrame(self.priven, text='Registrador', height = 225, width = 500, padx =5)
         f3 = LabelFrame(master_frame, text = 'Lista')
         f4 = LabelFrame(self.priven, text='Información', height = 100, width = 100)
-        #Desabilitando auto ajuste de frames
+        #Desabilitando auto ajuste de framesb
         f1.grid_propagate(False)
         fr1.grid_propagate(False)
         f2.grid_propagate(False)
@@ -95,6 +95,8 @@ class Window(Frame):
         self.symptom.grid(row = 5, column = 0, columnspan = 4,sticky = 'w', pady = 5)
         self.extra.grid(row = 9, column = 0, columnspan = 4,sticky = 'nw', pady = 5)
 
+
+
         #-------------------------------------------------------------------------------#
         raise_frame(f1)
     #------------------------------------#
@@ -103,7 +105,7 @@ class Window(Frame):
         #vista de arbol
         self.tree = ttk.Treeview(f3, height = 20, show='headings', columns=('name', 'brand', 'model', 'datei'), selectmode='extended')
         self.tree.grid_propagate(False)
-        self.tree.grid(row = 0, column = 0, sticky='nsew', padx = 5, pady = 10)
+        self.tree.grid(row = 0, column = 0, columnspan=2, sticky='nsew', padx = 5, pady = 10)
         #configuración de los encabezados
         self.tree.heading('name', text = 'Nombre', anchor = CENTER)
         self.tree.heading('datei', text = 'Fecha de registro', anchor = CENTER)
@@ -120,6 +122,35 @@ class Window(Frame):
         Scroll = Scrollbar(f3 ,command=self.tree.yview)
         Scroll.grid(row=0,column=6,ipady=135, sticky='ns')
         self.tree.config(yscrollcommand=Scroll.set)
+
+        #botones de lista
+        self.delete = Button(f3, text='Eliminar', command=self.delete)
+        self.complete = Button(f3, text='Completado')
+
+        self.delete.grid(row=1, column=0, sticky='we')
+        self.complete.grid(row=1, column=1, sticky='we')
+        #----
+    def delete(self):
+        self.message['text'] = ''
+        try:
+            self.tree.item(self.tree.selection())['text']
+            self.message['text'] = 'Elemento borrado Satisfactoriamente'
+        except IndexError as e:
+            self.message['text'] = 'Nada seleccionado'
+            return
+        self.message['text'] = ''
+        name = self.tree.item(self.tree.selection())['text']
+        query = 'DELETE FROM libreta WHERE id =(?)'
+        self.run_query(query, (name, ))
+
+        self.get_products()
+
+
+    def complete(self):
+        selected_items = self.tree.selection()
+
+
+
 
     #Creacion de init_window
     def init_window(self):
@@ -149,7 +180,7 @@ class Window(Frame):
         db_rows = self.run_query(query)
         #rellenando datos
         for row in db_rows:
-            self.tree.insert('', 0, text=(),values=(row[1], row[3], row[4], row[2]))
+            self.tree.insert('', 0, text=row[1], values=(row[1], row[3], row[4], row[2]))
     #----------------------------------------------------------------------------------------------
     #verificador de campos vacios
     def validation(self):
@@ -168,10 +199,8 @@ class Window(Frame):
         else:
             self.message['text'] = 'El nombre del dueño y la marca del dispositivo son obligatorios!'
         self.get_products()
-        #menú contextual
-    #Información extra
 
-
+    #detener la ventana
     def onExit(self):
         self.quit()
 
