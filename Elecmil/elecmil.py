@@ -118,8 +118,7 @@ class Window(Frame):
         self.tree.column('#1', minwidth=20, width=130)
         self.tree.column('#2', minwidth=20, width=110)
         self.tree.column('#3', minwidth=20, width=120)
-        # ejecución consulta
-        self.get_products()
+
         # Scrollbar para lista
         Scroll = Scrollbar(f3, command=self.tree.yview)
         Scroll.grid(row=0, column=6, ipady=135, sticky='ns')
@@ -139,8 +138,8 @@ class Window(Frame):
         # Botones
         add = Button(f1, text='Agregar', command=f2.lift).grid(column=1, row=0, pady=170, padx=215)
         cancel = Button(f2, text='Cancelar', command=f1.lift).grid(row=10, column=2, columnspan=2, sticky='we')
-        ok = Button(f2, text='Ok', command=self.add_product).grid(row=10, column=0, columnspan=2, sticky='we')
-        eliminar = Button(f1, text='Eliminar', command=self.delete_product(tree)).grid()
+        ok = Button(f2, text='Ok').grid(row=10, column=0, columnspan=2, sticky='we')
+        eliminar = Button(f1, text='Eliminar').grid()
         # editar = Button(f1, text='Editar').grid(row=1)
 
         # Mensajes de salida

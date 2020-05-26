@@ -7,7 +7,6 @@ from tkinter import *
 class DatabaseController:
     db_name = 'database.db'
 
-    # Updated
     def get_products(self):
         records = self.tree.get_children()
         for element in records:
@@ -17,7 +16,7 @@ class DatabaseController:
         db_rows = self.run_query(query)
 
         for row in db_rows:
-            self.tree.insert('', 0, text=row[1], values=(row[0], row[1], row[2]))
+            self.tree.insert('', 0, text=row[0], values=(row[0], row[1], row[2]))
 
     def validation(self):
         return len(self.owner_name.get()) != 0 and len(self.phone_number.get()) != 0
@@ -39,13 +38,13 @@ class DatabaseController:
         try:
             self.tree.item(self.tree.selection())['values'][0]
         except IndexError as e:
-            print('Error')
+            print('Nada seleccionado')
             return
         name = self.tree.item(self.tree.selection())['values'][0]
         query = "DELETE FROM datos WHERE unique_id=?"
-        print(query)
         self.run_query(query, (name,))
         self.get_products()
+        print('Limpio')
 
     def run_query(self, query, parameters=()):
         with sqlite3.connect(self.db_name) as conn:
@@ -78,56 +77,71 @@ class MainWindow(Frame, DatabaseController):
         b = ttk.Button(self.win, text="Okay", command=self.win.destroy)
         b.grid(row=1, column=0)
 
-    def editor(self):
+    def popup_showinfo(self):
         self.showinfo("Window", "Hello World!")
 
-    def __init__ (self, priven=None):
-        Frame.__init__(self, priven)
-        self.owner_name = Entry()
-        self.phone_number = Entry()
-        self.priven = priven
-        self.init_window()
-
-    def init_window (self):
-        # Interface
+    def Registrator(self):
         # Labels
         Label(text='Nombre del dueño:', fg="blue4", bg="gray80").grid(row=0, column=0, sticky='w')
         self.owner_name.focus()
         self.owner_name.grid(row=0, column=1, sticky='w')
 
-        Label(text='Número de telefono:', fg="blue4", bg="gray80").grid(row=1, column=0, sticky='w')
-        self.phone_number.grid(row=1, column=1, sticky='w')
+        Label(text='Número de telefono:', fg="blue4", bg="gray80").grid(row=0, column=2, sticky='w')
+        self.phone_number.grid(row=0, column=3, sticky='w')
+
+        Label(text='Marca').grid(row=1, column=0, sticky='w')
+        self.brand.grid(row=1, column=1, sticky='w')
+
+        Label(text='Modelo').grid(row=1, column=2, sticky='w')
+        self.model.grid(row=1, column=3, sticky='w')
+
+    def init_window(self):
+        # Interface
+        self.Registrator()
 
         # Buttons
-        ok = Button(text='Guardar', command=lambda: [self.editor()])
-        ok.grid(row=2, column=0, sticky='we')
+        ok = Button(text='Guardar', command=lambda: [self.complete()])
+        ok.grid(row=2, column=0, columnspan=2, sticky='we')
         delete = Button(text='Borrar', command=self.delete)
-        delete.grid(row=2, column=1, sticky='we')
+        delete.grid(row=2, column=2, columnspan=2, sticky='we')
 
         # List
-        self.tree = ttk.Treeview(height=10, show='headings', columns=('id', 'name', 'brand'), selectmode='extended')
+        self.tree = ttk.Treeview(
+            height=10,
+            show='headings',
+            columns=(
+                'unique_id',
+                'owner_name',
+                'phone_number'
+            ),
+            selectmode='extended')
         self.tree.grid_propagate(False)
-        self.tree.grid(row=3, column=0, sticky='nsew', padx=5, pady=10)
+        self.tree.grid(row=3, column=0, columnspan=4, sticky='nsew', padx=5, pady=10)
         # Headers
-        self.tree.heading('id', text='id', anchor=CENTER)
-        self.tree.heading('name', text='Nombre', anchor=CENTER)
-        self.tree.heading('brand', text='Numero de celular', anchor=CENTER)
+        self.tree.heading('unique_id', text='unique_id', anchor=CENTER)
+        self.tree.heading('owner_name', text='Nombre', anchor=CENTER)
+        self.tree.heading('phone_number', text='Numero de celular', anchor=CENTER)
 
         # Headers Size
         self.tree.column('#0', minwidth=20, width=40)
-        self.tree.column('#1', minwidth=20, width=40)
-        self.tree.column('#2', minwidth=20, width=130)
-        self.tree.column('#3', minwidth=20, width=110)
+        self.tree.column('#1', minwidth=20, width=130)
+        self.tree.column('#2', minwidth=20, width=110)
 
         self.tree.bind("<Double-1>", self.OnDoubleClick)
-
-        # Scrollbar
-        # Scroll = Scrollbar(command=self.tree.yview)
-        # self.tree.config(yscrollcommand=Scroll.set)
 
         # query
         self.get_products()
 
+    def __init__(self, priven=None):
+        Frame.__init__(self, priven)
+        # Inputs
+        self.owner_name = Entry()
+        self.phone_number = Entry()
+        self.brand = Entry()
+        self.model = Entry()
+
+        self.priven = priven
+        self.init_window()
 
 root = Tk()
 app = MainWindow(root)
