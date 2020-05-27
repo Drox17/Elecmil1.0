@@ -17,7 +17,6 @@ class DatabaseController:
         )
         self.run_query(query, (new_option, idd))
         self.get_products()
-        self.get_option_work()
 
     def updated_choices (self, new_option):
         query = "UPDATE datos SET option_work = ?"
@@ -27,12 +26,15 @@ class DatabaseController:
 
     def get_option_work(self):
         with sqlite3.connect(self.db_name) as conn:
+            id = self.reference_value
+            conn.row_factory = lambda cursor, row: row[0]
             cursor = conn.cursor()
-            cursor.execute("SELECT option_work FROM datos")
+            cursor.execute("SELECT option_work FROM datos WHERE unique_id='{}'".format(id))
             result_set = cursor.fetchall()
-            for option in result_set:
-                for self.l in option:
-                    self.l
+            self.result_set = result_set
+
+
+
 
 
     def get_products (self):
@@ -99,10 +101,12 @@ class MainWindow(Frame, DatabaseController):
     def OnDoubleClick (self, event):
         try:
             item = self.tree.selection()[0]
+            # self.reference_value have unique_id
             self.reference_value = self.tree.item(item, "text")
             self.popup_bonus()
             if len(self.tree.selection()) > 0:
                 self.tree.selection_remove(self.tree.selection()[0])
+                self.get_option_work()
 
         except IndexError as e:
             print('Nada seleccionado')
@@ -118,10 +122,14 @@ class MainWindow(Frame, DatabaseController):
         self.optionVar = StringVar()
 
         self.get_option_work()
-        if self.l == 'None':
+        option_choosed = self.result_set
+        # condicion de estado del trabajo
+        if option_choosed == 'None':
             self.optionVar.set("En Espera")
         else:
-            self.optionVar.set(self.l)
+            self.get_option_work()
+            self.optionVar.set(option_choosed)
+
         option = OptionMenu(self.win, self.optionVar, "En Curso", "En Espera", "Completado", "No Completado")
         option.grid(row=1, column=0, sticky='nswe')
 
