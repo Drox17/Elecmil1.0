@@ -17,6 +17,7 @@ class DatabaseController:
         )
         self.run_query(query, (new_option, idd))
         self.get_products()
+        self.get_option_work()
 
     def updated_choices (self, new_option):
         query = "UPDATE datos SET option_work = ?"
@@ -24,12 +25,15 @@ class DatabaseController:
         self.run_query(query, parameters)
         self.get_progress_work()
 
-    def get_progress_work (self):
-        print('getting progress')
-        records = self.optionVar.get()
-        query = 'SELECT option_work FROM datos'
-        db_option = self.run_query(query)
-        print('all ok in get_progress_work')
+    def get_option_work(self):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT option_work FROM datos")
+            result_set = cursor.fetchall()
+            for option in result_set:
+                for self.l in option:
+                    self.l
+
 
     def get_products (self):
         records = self.tree.get_children()
@@ -41,7 +45,7 @@ class DatabaseController:
 
         for row in db_rows:
             # sort items according to index or unique_id
-            self.tree.insert('', 0, text=row[6], values=(row[0], row[1], row[2], row[3], row[4], row[5]))
+            self.tree.insert('', 0, text=row[6], values=(row[0], row[1], row[2], row[3], row[4], row[5], row[7]))
 
     def complete (self):
         if self.validation():
@@ -89,7 +93,6 @@ class DatabaseController:
             conn.commit()
         return result
 
-
 class MainWindow(Frame, DatabaseController):
     work_process: OptionMenu
 
@@ -113,8 +116,12 @@ class MainWindow(Frame, DatabaseController):
         button_accept.grid(row=0, column=0)
 
         self.optionVar = StringVar()
-        self.optionVar.set("En Espera")
 
+        self.get_option_work()
+        if self.l == 'None':
+            self.optionVar.set("En Espera")
+        else:
+            self.optionVar.set(self.l)
         option = OptionMenu(self.win, self.optionVar, "En Curso", "En Espera", "Completado", "No Completado")
         option.grid(row=1, column=0, sticky='nswe')
 
@@ -130,13 +137,13 @@ class MainWindow(Frame, DatabaseController):
 
     def color_item (self, work_option):
         if work_option == "En Curso":
-            print('En curso')
+            print('Celeste')
         elif work_option == "En Espera":
-            print('En espera')
+            print('Amarillo')
         elif work_option == "Completado":
-            print('Completado')
+            print('Verde')
         else:
-            print('No completado')
+            print('Rojo')
 
     def Registrator_interfaces (self):
 
@@ -196,11 +203,13 @@ class MainWindow(Frame, DatabaseController):
                 'brand',
                 'model',
                 'serie',
+                'option_work'
             ),
             selectmode='extended')
         self.tree.grid_propagate(False)
         self.tree.grid(row=3, column=0, columnspan=4, sticky='nsew', padx=5, pady=10)
         # Headers
+        self.tree.heading('option_work', text='Estado', anchor=CENTER)
         self.tree.heading('owner_name', text='Nombre', anchor=CENTER)
         self.tree.heading('phone_number', text='Numero de celular', anchor=CENTER)
         self.tree.heading('brand', text='Marca', anchor=CENTER)
@@ -213,6 +222,7 @@ class MainWindow(Frame, DatabaseController):
         self.tree.column('#2', minwidth=20, width=110)
         self.tree.column('#3', minwidth=20, width=110)
         self.tree.column('#4', minwidth=20, width=110)
+        self.tree.column('#5', minwidth=20, width=110)
 
         self.tree.bind("<Double-1>", self.OnDoubleClick)
 
