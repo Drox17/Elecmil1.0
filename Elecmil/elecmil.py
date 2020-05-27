@@ -89,10 +89,7 @@ class Window(Frame):
         f3 = LabelFrame(master_frame, text='Lista')
         f4 = LabelFrame(self.priven, text='Información', height=100, width=100)
         # Desabilitando auto ajuste de framesb
-        f1.grid_propagate(False)
         fr1.grid_propagate(False)
-        f2.grid_propagate(False)
-        f4.grid_propagate(False)
         # configurando ubicaciones de frames
         master_frame.grid(row=0, column=0, rowspan=2, pady=5, padx=5, sticky='nsew')
         fr1.grid(row=1, column=0, padx=5, pady=5, sticky='nswe')

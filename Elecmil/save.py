@@ -1,20 +1,23 @@
 from tkinter import *
 
-root = Tk()
+# Top level window
+window = Tk()
 
-def leftClick(event):
-    print('left')
+# Option menu variable
+optionVar = StringVar()
+optionVar.set("Red")
 
-def middleClick(event):
-    print('middle')
+# Create a option menu
+option = OptionMenu(window, optionVar, "Red", "Blue", "White", "Black")
+option.grid()
 
-def rightClick(event):
-    print('right')
+# Create button with command
+def show():
+    print("Selected value :", optionVar.get())
 
-frame = Frame(root, width=300, height=250)
-frame.bind('<Button-1>', leftClick)
-frame.bind('<Button-2>', middleClick)
-frame.bind('<Button-3>', rightClick)
-frame.grid()
+btnShow = Button(window, text="Show", command=show)
+btnShow.grid()
+
+window.mainloop()
 
 root.mainloop()
